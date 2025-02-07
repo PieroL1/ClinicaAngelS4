@@ -1,0 +1,65 @@
+package controlador;
+
+import dao.AtencionMedicaDAO;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import database.ConexionDB;
+import modelo.AtencionMedica;
+import modelo.Cita;
+
+
+public class AtencionMedicaController {
+    private AtencionMedicaDAO atencionMedicaDAO;  // Se usa el mismo nombre en toda la clase
+
+    public AtencionMedicaController() {
+        this.atencionMedicaDAO = new AtencionMedicaDAO();  // Se asegura consistencia
+    }
+
+
+    public void registrarAtencion(int idCita, String diagnostico, String receta, String fechaAtencion) {
+        int idPaciente = atencionMedicaDAO.obtenerIdPacienteDesdeCita(idCita);
+        int idMedico = atencionMedicaDAO.obtenerIdMedicoDesdeCita(idCita);
+        AtencionMedica atencion = new AtencionMedica(0, idCita, idPaciente, idMedico, diagnostico, receta, fechaAtencion);
+        atencionMedicaDAO.registrarAtencion(atencion);
+
+    }
+
+    
+    public List<Cita> listarCitasPendientes(int idMedico) {
+        List<Cita> citas = new ArrayList<>();
+        String sql = "SELECT * FROM Cita WHERE id_medico = ? AND estado = 'Pendiente'";
+
+        try (Connection conexion = ConexionDB.conectar();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+            ps.setInt(1, idMedico);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Cita cita = new Cita(
+                    rs.getInt("id_cita"),
+                    rs.getInt("id_paciente"),
+                    rs.getInt("id_medico"),
+                    rs.getString("fecha_cita"),
+                    rs.getString("hora"),
+                    rs.getString("estado")
+                );
+                citas.add(cita);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return citas;
+    }
+
+
+    
+
+    public List<AtencionMedica> listarAtenciones() {
+        return atencionMedicaDAO.listarAtenciones();
+    }
+}
