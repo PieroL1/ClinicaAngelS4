@@ -28,5 +28,6 @@ public class LoginController {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
+         System.out.print("Hola ");
     }
 }
