@@ -146,6 +146,16 @@ private JPanel crearPanelBotones() {
     if (rol.equalsIgnoreCase("Farmacia")) {
         agregarBoton(buttonPanel, "Gestión de Medicamentos", "images/farmacia_icon.png", e -> abrirModulo("Farmacia"));
     }
+    
+    if (rol.equalsIgnoreCase("Administrador") || rol.equalsIgnoreCase("Cajero")) {
+    agregarBoton(buttonPanel, "Gestión de Facturación", "images/factura_icon.png", e -> abrirFacturacionFrame());
+    agregarBoton(buttonPanel, "Gestión de Pagos", "images/pago_icon.png", e -> abrirPagoFrame());
+    }
+    
+    if (rol.equalsIgnoreCase("Administrador") || rol.equalsIgnoreCase("Cajero")) {
+        agregarBoton(buttonPanel, "Gestión de Cajas", "images/caja_icon.png", e -> abrirCajaFrame());
+    }
+
 
     return buttonPanel;
 }
@@ -237,4 +247,17 @@ private JPanel crearPanelBotones() {
             JOptionPane.INFORMATION_MESSAGE
         );
     }
+    
+    private void abrirFacturacionFrame() {
+        SwingUtilities.invokeLater(() -> new FacturacionFrame().setVisible(true));
+    }
+
+    private void abrirPagoFrame() {
+        SwingUtilities.invokeLater(() -> new PagoFrame().setVisible(true));
+    }
+    
+    private void abrirCajaFrame() {
+        SwingUtilities.invokeLater(() -> new CajaFrame().setVisible(true));
+    }
+
 }

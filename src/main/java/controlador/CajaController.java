@@ -12,8 +12,8 @@ public class CajaController {
         this.cajaDAO = new CajaDAO();
     }
 
-    public void registrarCaja(String nombre, double saldoInicial, double saldoActual, Date fechaApertura, Date fechaCierre, String estado) {
-        Caja caja = new Caja(0, nombre, saldoInicial, saldoActual, fechaApertura, fechaCierre, estado);
+    public void registrarCaja(String nombre, double saldoInicial, double saldoActual, Date fechaApertura, String estado) {
+        Caja caja = new Caja(0, nombre, saldoInicial, saldoActual, fechaApertura, null, estado);
         cajaDAO.registrarCaja(caja);
     }
 
@@ -24,4 +24,14 @@ public class CajaController {
     public List<Caja> listarCajas() {
         return cajaDAO.listarCajas();
     }
-}
+
+    public void abrirCaja(int idCaja) {
+        cajaDAO.actualizarEstadoCaja(idCaja, "Abierta");
+    }
+
+    public void cerrarCaja(int idCaja) {
+        cajaDAO.actualizarEstadoCaja(idCaja, "Cerrada");
+    }
+
+
+    }

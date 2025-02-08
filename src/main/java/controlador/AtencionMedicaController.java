@@ -46,6 +46,7 @@ public class AtencionMedicaController {
                     rs.getInt("id_medico"),
                     rs.getString("fecha_cita"),
                     rs.getString("hora"),
+                    rs.getDouble("monto"),  // Agregar monto
                     rs.getString("estado")
                 );
                 citas.add(cita);

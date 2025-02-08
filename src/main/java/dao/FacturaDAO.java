@@ -7,16 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FacturaDAO {
+    
     public void registrarFactura(Factura factura) {
-        String sql = "INSERT INTO Factura (id_paciente, tipo, monto_total, fecha_emision, estado) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Factura (id_paciente, monto_total, fecha_emision, estado, tipo) VALUES (?, ?, ?, ?, ?)";
         
         try (Connection conexion = ConexionDB.conectar();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, factura.getIdPaciente());
-            ps.setString(2, factura.getTipo());
-            ps.setDouble(3, factura.getMontoTotal());
-            ps.setDate(4, new java.sql.Date(factura.getFechaEmision().getTime()));
-            ps.setString(5, factura.getEstado());
+            ps.setDouble(2, factura.getMontoTotal());
+            ps.setDate(3, new java.sql.Date(factura.getFechaEmision().getTime())); // Fecha como SQL Date
+            ps.setString(4, factura.getEstado());
+            ps.setString(5, factura.getTipo());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -34,10 +35,11 @@ public class FacturaDAO {
                 Factura factura = new Factura(
                     rs.getInt("id_factura"),
                     rs.getInt("id_paciente"),
-                    rs.getString("tipo"),
-                    rs.getDouble("monto_total"),
-                    rs.getDate("fecha_emision"),
+                    rs.getString("tipo"), // Tipo es String
+                    rs.getDouble("monto_total"), // Monto total es double
+                    rs.getDate("fecha_emision"), // Fecha es tipo Date
                     rs.getString("estado")
+                    
                 );
                 facturas.add(factura);
             }

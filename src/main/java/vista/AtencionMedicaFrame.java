@@ -26,7 +26,7 @@ public class AtencionMedicaFrame extends JFrame {
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(6, 2, 10, 10));
+        panel.setLayout(new GridLayout(7, 2, 10, 10));
         
         panel.add(new JLabel("ID Cita:"));
         idCitaField = new JTextField();
@@ -65,9 +65,16 @@ public class AtencionMedicaFrame extends JFrame {
         citasTable = new JTable(tableModel);
         citasTable.getSelectionModel().addListSelectionListener(e -> seleccionarCita());
         add(new JScrollPane(citasTable), BorderLayout.CENTER);
+
+        listarCitas(); // Cargar citas al abrir la ventana
     }
     
     private void registrarAtencion(ActionEvent e) {
+        if (idCitaField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una cita.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         atencionController.registrarAtencion(
             Integer.parseInt(idCitaField.getText()),
             diagnosticoArea.getText(),

@@ -6,14 +6,16 @@ public class Cita {
     private int idMedico;
     private String fecha;
     private String hora;
+    private double monto;  // Se agrega el campo monto
     private String estado;
 
-    public Cita(int id, int idPaciente, int idMedico, String fecha, String hora, String estado) {
+    public Cita(int id, int idPaciente, int idMedico, String fecha, String hora, double monto, String estado) {
         this.id = id;
         this.idPaciente = idPaciente;
         this.idMedico = idMedico;
         this.fecha = fecha;
         this.hora = hora;
+        this.monto = monto;
         this.estado = estado;
     }
 
@@ -27,6 +29,8 @@ public class Cita {
     public void setFecha(String fecha) { this.fecha = fecha; }
     public String getHora() { return hora; }
     public void setHora(String hora) { this.hora = hora; }
+    public double getMonto() { return monto; }  // Getter para monto
+    public void setMonto(double monto) { this.monto = monto; }  // Setter para monto
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
 }

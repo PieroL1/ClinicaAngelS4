@@ -2,7 +2,6 @@ package vista;
 
 import controlador.CitaController;
 import modelo.Cita;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -11,19 +10,19 @@ import java.util.List;
 
 public class CitasFrame extends JFrame {
     private CitaController citaController;
-    private JTextField idCitaField, pacienteField, medicoField, fechaField, horaField;
+    private JTextField idCitaField, pacienteField, medicoField, fechaField, horaField, montoField;
     private JTable citasTable;
     private DefaultTableModel tableModel;
 
     public CitasFrame() {
         citaController = new CitaController();
         setTitle("Gestión de Citas");
-        setSize(700, 500);
+        setSize(750, 550);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(6, 2, 10, 10));
+        panel.setLayout(new GridLayout(7, 2, 10, 10));
         
         panel.add(new JLabel("ID Cita:"));
         idCitaField = new JTextField();
@@ -46,6 +45,10 @@ public class CitasFrame extends JFrame {
         horaField = new JTextField();
         panel.add(horaField);
         
+        panel.add(new JLabel("Monto:"));
+        montoField = new JTextField();
+        panel.add(montoField);
+        
         JButton agregarButton = new JButton("Registrar Cita");
         agregarButton.addActionListener(this::registrarCita);
         panel.add(agregarButton);
@@ -60,7 +63,7 @@ public class CitasFrame extends JFrame {
         
         add(panel, BorderLayout.NORTH);
 
-        tableModel = new DefaultTableModel(new String[]{"ID", "Paciente", "Médico", "Fecha", "Hora", "Estado"}, 0);
+        tableModel = new DefaultTableModel(new String[]{"ID", "Paciente", "Médico", "Fecha", "Hora", "Monto", "Estado"}, 0);
         citasTable = new JTable(tableModel);
         citasTable.getSelectionModel().addListSelectionListener(e -> seleccionarCita());
         add(new JScrollPane(citasTable), BorderLayout.CENTER);
@@ -71,7 +74,8 @@ public class CitasFrame extends JFrame {
             Integer.parseInt(pacienteField.getText()), 
             Integer.parseInt(medicoField.getText()), 
             fechaField.getText(), 
-            horaField.getText()
+            horaField.getText(),
+            Double.parseDouble(montoField.getText())
         );
         listarCitas();
     }
@@ -93,7 +97,7 @@ public class CitasFrame extends JFrame {
         tableModel.setRowCount(0);
         List<Cita> citas = citaController.listarCitas();
         for (Cita c : citas) {
-            tableModel.addRow(new Object[]{c.getId(), c.getIdPaciente(), c.getIdMedico(), c.getFecha(), c.getHora(), c.getEstado()});
+            tableModel.addRow(new Object[]{c.getId(), c.getIdPaciente(), c.getIdMedico(), c.getFecha(), c.getHora(), c.getMonto(), c.getEstado()});
         }
     }
     
@@ -105,6 +109,7 @@ public class CitasFrame extends JFrame {
             medicoField.setText(tableModel.getValueAt(selectedRow, 2).toString());
             fechaField.setText(tableModel.getValueAt(selectedRow, 3).toString());
             horaField.setText(tableModel.getValueAt(selectedRow, 4).toString());
+            montoField.setText(tableModel.getValueAt(selectedRow, 5).toString());
         }
     }
 }
