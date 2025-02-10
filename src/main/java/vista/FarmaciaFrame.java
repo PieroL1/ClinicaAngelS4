@@ -100,8 +100,9 @@ public class FarmaciaFrame extends JFrame {
         carrito.clear();
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             int id = (int) tableModel.getValueAt(i, 0);
-            int cantidad = Integer.parseInt(tableModel.getValueAt(i, 5).toString()); 
+            int cantidad = Integer.parseInt(tableModel.getValueAt(i, 5).toString());
             double precio = (double) tableModel.getValueAt(i, 3);
+
             if (cantidad > 0) {
                 carrito.put(id, cantidad);
                 total += cantidad * precio;
@@ -116,11 +117,12 @@ public class FarmaciaFrame extends JFrame {
         int confirm = JOptionPane.showConfirmDialog(this, "Total a pagar: S/. " + total + "\n¿Confirmar compra?", "Confirmar Compra", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             facturaController.generarFacturaMedicamentos(carrito, total);
-            medicamentoController.actualizarStock(carrito);
+            medicamentoController.actualizarStock(carrito); // 🔹 Se encarga de restar el stock
             JOptionPane.showMessageDialog(this, "Compra realizada con éxito. Diríjase a Gestión de Pagos.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             dispose();
         }
     }
+
 
     private JButton crearBoton(String texto, Color color) {
         JButton boton = new JButton(texto);
