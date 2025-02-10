@@ -2,7 +2,9 @@ package vista;
 
 import controlador.CajaController;
 import modelo.Caja;
+
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,30 +18,48 @@ public class CajaFrame extends JFrame {
     public CajaFrame() {
         cajaController = new CajaController();
         setTitle("Gestión de Cajas");
-        setSize(800, 500);
+        setSize(800, 550);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+        getContentPane().setBackground(new Color(240, 240, 240));
+        setLayout(new BorderLayout(10, 10));
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(1, 3, 10, 10));
-        
-        JButton abrirCajaButton = new JButton("Abrir Caja");
+        // 📌 Panel Principal
+        JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
+        panelPrincipal.setBorder(new EmptyBorder(15, 15, 15, 15));
+        panelPrincipal.setBackground(Color.WHITE);
+        add(panelPrincipal, BorderLayout.CENTER);
+
+        // 📌 Panel de Botones
+        JPanel panelBotones = new JPanel(new FlowLayout());
+        panelBotones.setBackground(new Color(220, 230, 250));
+
+        JButton abrirCajaButton = crearBoton("Abrir Caja");
         abrirCajaButton.addActionListener(this::abrirCaja);
-        panel.add(abrirCajaButton);
-        
-        JButton cerrarCajaButton = new JButton("Cerrar Caja");
+        panelBotones.add(abrirCajaButton);
+
+        JButton cerrarCajaButton = crearBoton("Cerrar Caja");
         cerrarCajaButton.addActionListener(this::cerrarCaja);
-        panel.add(cerrarCajaButton);
-        
-        JButton administrarCajaButton = new JButton("Administrar Caja");
+        panelBotones.add(cerrarCajaButton);
+
+        JButton administrarCajaButton = crearBoton("Administrar Caja");
         administrarCajaButton.addActionListener(this::administrarCaja);
-        panel.add(administrarCajaButton);
-        
-        add(panel, BorderLayout.NORTH);
+        panelBotones.add(administrarCajaButton);
+
+        panelPrincipal.add(panelBotones, BorderLayout.NORTH);
+
+        // 📌 Panel Tabla Cajas
+        JPanel panelTabla = new JPanel(new BorderLayout());
+        panelTabla.setBorder(BorderFactory.createTitledBorder("Lista de Cajas"));
+        panelTabla.setBackground(new Color(240, 220, 230));
 
         tableModel = new DefaultTableModel(new String[]{"ID", "Nombre", "Saldo Inicial", "Saldo Actual", "Fecha Apertura", "Fecha Cierre", "Estado"}, 0);
         cajaTable = new JTable(tableModel);
-        add(new JScrollPane(cajaTable), BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(cajaTable);
+        panelTabla.add(scrollPane, BorderLayout.CENTER);
+
+        panelPrincipal.add(panelTabla, BorderLayout.CENTER);
+
         listarCajas();
     }
 
@@ -76,7 +96,7 @@ public class CajaFrame extends JFrame {
         JOptionPane.showMessageDialog(this, "La caja ha sido cerrada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
         listarCajas();
     }
-    
+
     private void administrarCaja(ActionEvent e) {
         int selectedRow = cajaTable.getSelectedRow();
         if (selectedRow == -1) {
@@ -85,5 +105,14 @@ public class CajaFrame extends JFrame {
         }
         int idCaja = (int) tableModel.getValueAt(selectedRow, 0);
         new AdministrarCajaFrame(idCaja).setVisible(true);
+    }
+
+    private JButton crearBoton(String texto) {
+        JButton boton = new JButton(texto);
+        boton.setBackground(new Color(100, 150, 250));
+        boton.setForeground(Color.WHITE);
+        boton.setFocusPainted(false);
+        boton.setBorder(new EmptyBorder(10, 15, 10, 15));
+        return boton;
     }
 }

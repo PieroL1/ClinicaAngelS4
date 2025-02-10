@@ -25,4 +25,10 @@ public class MedicamentoController {
             medicamentoDAO.actualizarStock(idMedicamento, cantidadComprada);
         }
     }
+    
+    public List<Medicamento> obtenerMedicamentosPorPaciente(int idPaciente) {
+        return medicamentoDAO.obtenerMedicamentosPorPaciente(idPaciente);
+    }
+
+    
 }

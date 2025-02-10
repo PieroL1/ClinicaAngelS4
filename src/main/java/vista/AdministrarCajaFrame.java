@@ -2,7 +2,9 @@ package vista;
 
 import controlador.CajaController;
 import modelo.Caja;
+
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -23,40 +25,67 @@ public class AdministrarCajaFrame extends JFrame {
         Caja caja = cajaController.obtenerCajaPorId(idCaja);
         if (caja == null) {
             JOptionPane.showMessageDialog(null, "La caja con ID " + idCaja + " no existe.", "Error", JOptionPane.ERROR_MESSAGE);
-            return; // No crear la ventana si la caja no existe
+            return;
         }
 
-        setTitle("Administrar Caja - " + caja.getNombre()); // Mostrar el nombre de la caja en el título
-        setSize(800, 500);
+        setTitle("Administrar Caja - " + caja.getNombre());
+        setSize(850, 550);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+        setLayout(new BorderLayout(10, 10));
+        getContentPane().setBackground(new Color(240, 240, 240));
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 2, 10, 10));
+        // 📌 Panel Principal
+        JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
+        panelPrincipal.setBorder(new EmptyBorder(15, 15, 15, 15));
+        panelPrincipal.setBackground(Color.WHITE);
+        add(panelPrincipal, BorderLayout.CENTER);
 
-        panel.add(new JLabel("Saldo Actual:"));
-        saldoActualLabel = new JLabel();
-        panel.add(saldoActualLabel);
+        // 📌 Panel Superior (Saldo y Botones)
+        JPanel panelSuperior = new JPanel(new GridLayout(2, 2, 10, 10));
+        panelSuperior.setBorder(BorderFactory.createTitledBorder("Gestión de Caja"));
+        panelSuperior.setBackground(new Color(220, 230, 250));
 
-        JButton registrarIngresoButton = new JButton("Registrar Ingreso");
+        panelSuperior.add(new JLabel("Saldo Actual:", SwingConstants.RIGHT));
+        saldoActualLabel = new JLabel("", SwingConstants.LEFT);
+        saldoActualLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        saldoActualLabel.setForeground(new Color(0, 128, 0)); // Color verde
+        panelSuperior.add(saldoActualLabel);
+
+        JButton registrarIngresoButton = crearBoton("Registrar Ingreso", new Color(50, 180, 80));
         registrarIngresoButton.addActionListener(this::registrarIngreso);
-        panel.add(registrarIngresoButton);
+        panelSuperior.add(registrarIngresoButton);
 
-        JButton registrarEgresoButton = new JButton("Registrar Egreso");
+        JButton registrarEgresoButton = crearBoton("Registrar Egreso", new Color(200, 50, 50));
         registrarEgresoButton.addActionListener(this::registrarEgreso);
-        panel.add(registrarEgresoButton);
+        panelSuperior.add(registrarEgresoButton);
 
-        JButton regresarButton = new JButton("Regresar");
-        regresarButton.addActionListener(e -> dispose());
-        panel.add(regresarButton);
+        panelPrincipal.add(panelSuperior, BorderLayout.NORTH);
 
-        add(panel, BorderLayout.NORTH);
+        // 📌 Tabla de Transacciones
+        JPanel panelTabla = new JPanel(new BorderLayout());
+        panelTabla.setBorder(BorderFactory.createTitledBorder("Historial de Transacciones"));
+        panelTabla.setBackground(new Color(250, 250, 250));
 
         tableModel = new DefaultTableModel(new String[]{"Tipo", "Monto", "Fecha"}, 0);
         transaccionesTable = new JTable(tableModel);
-        add(new JScrollPane(transaccionesTable), BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(transaccionesTable);
+        panelTabla.add(scrollPane, BorderLayout.CENTER);
 
-        cargarDatosCaja(caja); // Se pasa la caja obtenida
+        panelPrincipal.add(panelTabla, BorderLayout.CENTER);
+
+        // 📌 Panel Inferior con Botón de Regreso
+        JPanel panelInferior = new JPanel(new FlowLayout());
+        panelInferior.setBackground(new Color(240, 240, 240));
+
+        JButton regresarButton = crearBoton("Regresar", new Color(100, 100, 250));
+        regresarButton.addActionListener(e -> dispose());
+        panelInferior.add(regresarButton);
+
+        panelPrincipal.add(panelInferior, BorderLayout.SOUTH);
+
+        // Cargar los datos iniciales
+        cargarDatosCaja(caja);
     }
 
     private void cargarDatosCaja(Caja caja) {
@@ -72,7 +101,6 @@ public class AdministrarCajaFrame extends JFrame {
         }
     }
 
-
     private void registrarIngreso(ActionEvent e) {
         String montoStr = JOptionPane.showInputDialog(this, "Ingrese el monto de ingreso:");
         try {
@@ -84,7 +112,6 @@ public class AdministrarCajaFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Ingrese un monto válido.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 
     private void registrarEgreso(ActionEvent e) {
         String montoStr = JOptionPane.showInputDialog(this, "Ingrese el monto de egreso:");
@@ -98,4 +125,12 @@ public class AdministrarCajaFrame extends JFrame {
         }
     }
 
+    private JButton crearBoton(String texto, Color color) {
+        JButton boton = new JButton(texto);
+        boton.setBackground(color);
+        boton.setForeground(Color.WHITE);
+        boton.setFocusPainted(false);
+        boton.setBorder(new EmptyBorder(10, 15, 10, 15));
+        return boton;
+    }
 }

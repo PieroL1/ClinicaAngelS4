@@ -32,7 +32,7 @@ public class AtencionMedicaFrame extends JFrame {
         medicamentoController = new MedicamentoController();
         recetaLista = new ArrayList<>();
         setTitle("Atención Médica");
-        setSize(900, 600);
+        setSize(900, 650);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
@@ -71,23 +71,29 @@ public class AtencionMedicaFrame extends JFrame {
         panelPrincipal.add(panelDatos, BorderLayout.NORTH);
 
         // 📌 Panel Receta con diseño mejorado
-        JPanel panelReceta = new JPanel(new BorderLayout(10, 10));
+        JPanel panelReceta = new JPanel(new GridLayout(1, 2, 10, 10));
         panelReceta.setBorder(BorderFactory.createTitledBorder("Receta Médica"));
         panelReceta.setBackground(new Color(230, 250, 220));
 
         medicamentosModel = new DefaultListModel<>();
         medicamentosList = new JList<>(medicamentosModel);
         medicamentosList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        panelReceta.add(new JScrollPane(medicamentosList), BorderLayout.CENTER);
+        JScrollPane scrollMedicamentos = new JScrollPane(medicamentosList);
+        scrollMedicamentos.setBorder(BorderFactory.createTitledBorder("Medicamentos Disponibles"));
+        panelReceta.add(scrollMedicamentos);
+
+        JPanel panelTablaReceta = new JPanel(new BorderLayout());
+        recetaTableModel = new DefaultTableModel(new String[]{"Medicamento", "Cantidad"}, 0);
+        recetaTable = new JTable(recetaTableModel);
+        JScrollPane scrollReceta = new JScrollPane(recetaTable);
+        scrollReceta.setBorder(BorderFactory.createTitledBorder("Medicamentos Recetados"));
+        panelTablaReceta.add(scrollReceta, BorderLayout.CENTER);
 
         JButton agregarMedicamentoButton = crearBoton("Agregar Medicamento");
         agregarMedicamentoButton.addActionListener(this::agregarMedicamento);
-        panelReceta.add(agregarMedicamentoButton, BorderLayout.SOUTH);
+        panelTablaReceta.add(agregarMedicamentoButton, BorderLayout.SOUTH);
 
-        recetaTableModel = new DefaultTableModel(new String[]{"Medicamento", "Cantidad"}, 0);
-        recetaTable = new JTable(recetaTableModel);
-        panelReceta.add(new JScrollPane(recetaTable), BorderLayout.EAST);
-
+        panelReceta.add(panelTablaReceta);
         panelPrincipal.add(panelReceta, BorderLayout.CENTER);
 
         // 📌 Panel Botones con estilo mejorado
@@ -131,11 +137,6 @@ public class AtencionMedicaFrame extends JFrame {
             for (Medicamento medicamento : medicamentos) {
                 medicamentosModel.addElement(medicamento);
             }
-        }
-
-        System.out.println("Medicamentos cargados en la lista:");
-        for (int i = 0; i < medicamentosModel.size(); i++) {
-            System.out.println(medicamentosModel.getElementAt(i).getNombre());
         }
 
         medicamentosList.setModel(medicamentosModel);
@@ -198,7 +199,6 @@ public class AtencionMedicaFrame extends JFrame {
         boton.setBorder(new EmptyBorder(10, 15, 10, 15));
         return boton;
     }
-    
 private void registrarAtencion(ActionEvent e) {
     if (idCitaField.getText().isEmpty()) {
         JOptionPane.showMessageDialog(this, "Debe seleccionar una cita.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -219,7 +219,6 @@ private void registrarAtencion(ActionEvent e) {
     );
     listarCitas();
 }
-
     
     
 }

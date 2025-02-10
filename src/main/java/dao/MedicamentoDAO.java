@@ -67,5 +67,36 @@ public class MedicamentoDAO {
         }
         return false;
     }
+    
+    
+public List<Medicamento> obtenerMedicamentosPorPaciente(int idPaciente) {
+    List<Medicamento> lista = new ArrayList<>();
+    String sql = "SELECT m.id_medicamento, m.nombre, m.descripcion, m.precio, m.stock " +
+                 "FROM RecetaMedica r " +
+                 "JOIN Medicamento m ON r.id_medicamento = m.id_medicamento " +
+                 "WHERE r.id_paciente = ?";
+
+    try (Connection conexion = ConexionDB.conectar();
+         PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setInt(1, idPaciente);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Medicamento medicamento = new Medicamento(
+                rs.getInt("id_medicamento"),
+                rs.getString("nombre"),
+                rs.getString("descripcion"),
+                rs.getDouble("precio"),
+                rs.getInt("stock")
+            );
+            lista.add(medicamento);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return lista;
+}
+
+    
 
 }
