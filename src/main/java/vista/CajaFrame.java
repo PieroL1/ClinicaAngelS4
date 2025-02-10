@@ -2,7 +2,6 @@ package vista;
 
 import controlador.CajaController;
 import modelo.Caja;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -22,7 +21,7 @@ public class CajaFrame extends JFrame {
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(1, 2, 10, 10));
+        panel.setLayout(new GridLayout(1, 3, 10, 10));
         
         JButton abrirCajaButton = new JButton("Abrir Caja");
         abrirCajaButton.addActionListener(this::abrirCaja);
@@ -31,6 +30,10 @@ public class CajaFrame extends JFrame {
         JButton cerrarCajaButton = new JButton("Cerrar Caja");
         cerrarCajaButton.addActionListener(this::cerrarCaja);
         panel.add(cerrarCajaButton);
+        
+        JButton administrarCajaButton = new JButton("Administrar Caja");
+        administrarCajaButton.addActionListener(this::administrarCaja);
+        panel.add(administrarCajaButton);
         
         add(panel, BorderLayout.NORTH);
 
@@ -57,10 +60,8 @@ public class CajaFrame extends JFrame {
         int idCaja = (int) tableModel.getValueAt(selectedRow, 0);
         cajaController.abrirCaja(idCaja);
 
-        // Confirmación
         JOptionPane.showMessageDialog(this, "La caja ha sido abierta exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
-
-        listarCajas(); // Refrescar la tabla
+        listarCajas();
     }
 
     private void cerrarCaja(ActionEvent e) {
@@ -72,10 +73,17 @@ public class CajaFrame extends JFrame {
         int idCaja = (int) tableModel.getValueAt(selectedRow, 0);
         cajaController.cerrarCaja(idCaja);
 
-        // Confirmación
         JOptionPane.showMessageDialog(this, "La caja ha sido cerrada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
-
-        listarCajas(); // Refrescar la tabla
+        listarCajas();
     }
-
+    
+    private void administrarCaja(ActionEvent e) {
+        int selectedRow = cajaTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una caja para administrar.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int idCaja = (int) tableModel.getValueAt(selectedRow, 0);
+        new AdministrarCajaFrame(idCaja).setVisible(true);
+    }
 }

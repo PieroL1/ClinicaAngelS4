@@ -33,5 +33,20 @@ public class CajaController {
         cajaDAO.actualizarEstadoCaja(idCaja, "Cerrada");
     }
 
-
+    public Caja obtenerCajaPorId(int idCaja) {
+        return cajaDAO.obtenerCajaPorId(idCaja);
     }
+
+    public void registrarIngreso(int idCaja, double monto) {
+        cajaDAO.registrarIngreso(idCaja, monto);
+    }
+
+    public void registrarEgreso(int idCaja, double monto) {
+        cajaDAO.registrarEgreso(idCaja, monto);
+    }
+
+    public List<String[]> obtenerHistorialTransacciones(int idCaja) {
+        return cajaDAO.obtenerHistorialTransacciones(idCaja);
+    }
+
+}

@@ -28,4 +28,14 @@ public class PacienteController {
     public List<Paciente> listarPacientes() {
         return pacienteDAO.listarPacientes();
     }
+
+    // Nuevo método para buscar paciente por DNI
+    public Paciente buscarPorDni(String dni) {
+        return pacienteDAO.buscarPorDni(dni);
+    }
+
+    // Nuevo método para registrar paciente
+    public void registrarPaciente(Paciente paciente) {
+        pacienteDAO.agregarPaciente(paciente);
+    }
 }

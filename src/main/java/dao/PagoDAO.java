@@ -7,21 +7,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PagoDAO {
-    public void registrarPago(Pago pago) {
-        String sql = "INSERT INTO Pago (id_factura, id_caja, monto, fecha_pago, metodo_pago) VALUES (?, ?, ?, ?, ?)";
+public void registrarPago(int idFactura, int idCaja, double monto, Date fechaPago, String metodoPago) {
+    String sql = "INSERT INTO Pago (id_factura, id_caja, monto, fecha_pago, metodo_pago) VALUES (?, ?, ?, ?, ?)";
+    String updateFactura = "UPDATE Factura SET estado = 'Pagado' WHERE id_factura = ?";
 
-        try (Connection conexion = ConexionDB.conectar();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setInt(1, pago.getIdFactura());
-            ps.setInt(2, pago.getIdCaja());
-            ps.setDouble(3, pago.getMonto());
-            ps.setDate(4, new java.sql.Date(pago.getFechaPago().getTime())); // Convertimos Date a SQL Date
-            ps.setString(5, pago.getMetodoPago());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    try (Connection conexion = ConexionDB.conectar();
+         PreparedStatement ps = conexion.prepareStatement(sql);
+         PreparedStatement psFactura = conexion.prepareStatement(updateFactura)) {
+
+        ps.setInt(1, idFactura);
+        ps.setInt(2, idCaja);
+        ps.setDouble(3, monto);
+        ps.setDate(4, fechaPago); // Ahora fechaPago es java.sql.Date
+        ps.setString(5, metodoPago);
+        ps.executeUpdate();
+
+        // Actualizar el estado de la factura a "Pagado"
+        psFactura.setInt(1, idFactura);
+        psFactura.executeUpdate();
+
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+}
+
+
 
     public List<Pago> listarPagos() {
         List<Pago> pagos = new ArrayList<>();

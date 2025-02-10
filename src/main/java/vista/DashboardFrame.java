@@ -136,12 +136,9 @@ private JPanel crearPanelBotones() {
     }
 
     if (rol.equalsIgnoreCase("Administrador") || rol.equalsIgnoreCase("Cajero")) {
-        agregarBoton(buttonPanel, "Administrar Caja", "images/caja_icon.png", e -> abrirModulo("Caja"));
+        agregarBoton(buttonPanel, "Administrar Caja", "images/caja_icon.png", e -> abrirAdministrarCajaFrame());
     }
 
-    if (rol.equalsIgnoreCase("Enfermera")) {
-        agregarBoton(buttonPanel, "Atender Emergencias", "images/emergencia_icon.png", e -> abrirModulo("Emergencias"));
-    }
 
     if (rol.equalsIgnoreCase("Farmacia")) {
         agregarBoton(buttonPanel, "Gestión de Medicamentos", "images/farmacia_icon.png", e -> abrirModulo("Farmacia"));
@@ -156,7 +153,15 @@ private JPanel crearPanelBotones() {
         agregarBoton(buttonPanel, "Gestión de Cajas", "images/caja_icon.png", e -> abrirCajaFrame());
     }
 
+    if (rol.equalsIgnoreCase("Enfermera")) {
+       agregarBoton(buttonPanel, "Atender Emergencias", "images/emergencia_icon.png", e -> abrirRegistroEmergenciaFrame());
+    }
+    
+    if (rol.equalsIgnoreCase("Administrador") || rol.equalsIgnoreCase("TecnicoFarmacia")) {
+        agregarBoton(buttonPanel, "Farmacia", "images/farmacia_icon.png", e -> abrirFarmaciaFrame());
+    }
 
+    
     return buttonPanel;
 }
 
@@ -259,5 +264,32 @@ private JPanel crearPanelBotones() {
     private void abrirCajaFrame() {
         SwingUtilities.invokeLater(() -> new CajaFrame().setVisible(true));
     }
+    
+    private void abrirAdministrarCajaFrame() {
+        String idCajaStr = JOptionPane.showInputDialog(this, "Ingrese el ID de la Caja:");
+        if (idCajaStr != null && !idCajaStr.trim().isEmpty()) {
+            try {
+                int idCaja = Integer.parseInt(idCajaStr);
+                SwingUtilities.invokeLater(() -> new AdministrarCajaFrame(idCaja).setVisible(true));
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Ingrese un ID válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void abrirRegistroEmergenciaFrame() {
+        if (rol.equalsIgnoreCase("Enfermera")) {
+            SwingUtilities.invokeLater(() -> new RegistroEmergenciaFrame(idUsuario).setVisible(true));
+        } else {
+            JOptionPane.showMessageDialog(this, "Solo las enfermeras pueden registrar emergencias.", "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
+    private void abrirFarmaciaFrame() {
+        SwingUtilities.invokeLater(() -> new FarmaciaFrame().setVisible(true));
+    }
+
+    
 
 }

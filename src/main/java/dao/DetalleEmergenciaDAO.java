@@ -46,4 +46,25 @@ public class DetalleEmergenciaDAO {
         }
         return detalles;
     }
+    
+    public void registrarEmergencia(DetalleEmergencia emergencia) {
+        String sql = "INSERT INTO DetalleEmergencia (id_paciente, id_enfermera, id_medico, descripcion, costo) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conexion = ConexionDB.conectar();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, emergencia.getIdPaciente());
+            ps.setInt(2, emergencia.getIdEnfermera()); // Ahora se pasa correctamente
+            ps.setInt(3, emergencia.getIdMedico());
+            ps.setString(4, emergencia.getDescripcion());
+            ps.setDouble(5, emergencia.getCosto());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    
+    
+    
+    
 }

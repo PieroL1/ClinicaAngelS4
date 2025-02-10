@@ -74,4 +74,31 @@ public class PacienteDAO {
         }
         return pacientes;
     }
+    
+    public Paciente buscarPorDni(String dni) {
+        String sql = "SELECT * FROM Paciente WHERE dni = ?";
+        try (Connection conexion = ConexionDB.conectar();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, dni);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Paciente(
+                    rs.getInt("id_paciente"),
+                    rs.getString("nombre"),
+                    rs.getString("apellido"),
+                    rs.getString("dni"),
+                    rs.getString("fecha_nacimiento"),
+                    rs.getString("telefono"),
+                    rs.getString("direccion")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // Retorna null si no se encuentra el paciente
+    }
+
+    
+    
+    
 }

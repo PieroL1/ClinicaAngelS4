@@ -49,7 +49,7 @@ public class ConexionDB {
             if (rs.next()) {
                 int idUsuario = rs.getInt("id_usuario");
                 String rol = rs.getString("rol");
-                user = new Usuario(idUsuario, usuario, rol); // Retorna un objeto Usuario
+                user = new Usuario(idUsuario, "", "", usuario, rol); // Se agregan valores vacíos para nombre y apellido
             }
         } catch (SQLException e) {
             System.err.println("Error al verificar usuario: " + e.getMessage());

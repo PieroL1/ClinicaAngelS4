@@ -1,15 +1,21 @@
 package vista;
 
 import controlador.PagoController;
+import controlador.FacturaController;
 import modelo.Pago;
+import modelo.Factura;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
+import java.util.Date;
 
 public class PagoFrame extends JFrame {
     private PagoController pagoController;
+    private FacturaController facturaController;
     private JTextField idFacturaField, idCajaField, montoField;
     private JComboBox<String> metodoPagoCombo;
     private JTable pagoTable;
@@ -17,6 +23,7 @@ public class PagoFrame extends JFrame {
 
     public PagoFrame() {
         pagoController = new PagoController();
+        facturaController = new FacturaController();
         setTitle("Registro de Pagos");
         setSize(750, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -28,13 +35,22 @@ public class PagoFrame extends JFrame {
         panel.add(new JLabel("ID Factura:"));
         idFacturaField = new JTextField();
         panel.add(idFacturaField);
+
+        // Agregar listener para autocompletar caja y monto
+        idFacturaField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { completarDatosFactura(); }
+            public void removeUpdate(DocumentEvent e) { completarDatosFactura(); }
+            public void changedUpdate(DocumentEvent e) { completarDatosFactura(); }
+        });
         
         panel.add(new JLabel("ID Caja:"));
         idCajaField = new JTextField();
+        idCajaField.setEditable(false);
         panel.add(idCajaField);
         
         panel.add(new JLabel("Monto:"));
         montoField = new JTextField();
+        montoField.setEditable(false);
         panel.add(montoField);
         
         panel.add(new JLabel("Método de Pago:"));
@@ -54,6 +70,20 @@ public class PagoFrame extends JFrame {
         listarPagos();
     }
 
+    private void completarDatosFactura() {
+        try {
+            int idFactura = Integer.parseInt(idFacturaField.getText());
+            Factura factura = facturaController.obtenerFacturaPorId(idFactura);
+            if (factura != null) {
+                idCajaField.setText(String.valueOf(factura.getIdCaja()));
+                montoField.setText(String.valueOf(factura.getMontoTotal()));
+            }
+        } catch (NumberFormatException ex) {
+            idCajaField.setText("");
+            montoField.setText("");
+        }
+    }
+
     private void registrarPago(ActionEvent e) {
         if (idFacturaField.getText().isEmpty() || idCajaField.getText().isEmpty() || montoField.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, completa todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -67,7 +97,7 @@ public class PagoFrame extends JFrame {
             String metodoPago = (String) metodoPagoCombo.getSelectedItem();
 
             // Generamos la fecha actual como fecha de pago
-            java.util.Date fechaPago = new java.util.Date();
+            Date fechaPago = new Date();
 
             pagoController.registrarPago(idFactura, idCaja, monto, fechaPago, metodoPago);
             listarPagos();
