@@ -6,6 +6,7 @@ public class Medicamento {
     private String descripcion;
     private double precio;
     private int stock;
+    private int cantidad; // 🔹 Nuevo atributo para manejar la cantidad recetada
 
     public Medicamento(int id, String nombre, String descripcion, double precio, int stock) {
         this.id = id;
@@ -13,6 +14,7 @@ public class Medicamento {
         this.descripcion = descripcion;
         this.precio = precio;
         this.stock = stock;
+        this.cantidad = 0; // Por defecto
     }
 
     public int getId() {
@@ -44,5 +46,14 @@ public class Medicamento {
         return nombre; // Muestra solo el nombre del medicamento
     }
 
+    
+    // Getter y Setter de cantidad
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
 
 }
